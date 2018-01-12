@@ -9,6 +9,7 @@
         img: /^!\[([^\n]+)\]\(([^\n]+)\)/,
         bold: /^[*_]{2}([^\n]+)[*_]{2}/,
         italic: /^[*_]([^\n]+)[*_]/,
+        hr: /^(-{2,})(?:\n+)/,
         text: /([^\n]+)/
     }
 
@@ -41,6 +42,16 @@
                 tokens.push({
                     rule: 'blockquote',
                     text: token[1]
+                });
+                md = md.substring(token[0].length);
+                continue;
+            }
+            // Grab any horizontal rules (needs to be before ul)
+            if (token = lib.hr.exec(md)) {
+                console.log("hr" + token[1]);
+                tokens.push({
+                    rule: 'hr',
+                    num: token[1].length
                 });
                 md = md.substring(token[0].length);
                 continue;
@@ -164,6 +175,10 @@
             '</strong>';
     }
 
+    Htmlifier.prototype.hr = function () {
+        return '<hr/>';
+    }
+
     Htmlifier.prototype.paragraph = function (text) {
         return '<p>' +
             parseInner(text.text) +
@@ -187,6 +202,11 @@
                 case 'ulist':
                     {
                         str += htmlifier.ulist(token);
+                        break;
+                    }
+                case 'hr':
+                    {
+                        str += htmlifier.hr();
                         break;
                     }
                 case 'text':
