@@ -2,7 +2,7 @@
 (function () {
     const lib = {
         newline: /^\n+/,
-        heading: /^(#{1,6})\s*([^\n]+)/, //
+        heading: /^(#{1,6})\s*([^\n]+)/,
         blockquote: /^>([^\n]+)/,
         ulist: /^([*+-])\s*([^\n]+)(?:\n|$)/,
         link: /^\[([^\n]+)\]\(([^\n]+)\)/,
@@ -50,7 +50,6 @@
             }
             // Grab any horizontal rules (needs to be before ul)
             if (token = lib.hr.exec(md)) {
-                console.log("hr" + token[1]);
                 tokens.push({
                     rule: 'hr',
                     num: token[1].length
@@ -239,7 +238,7 @@
                         str += htmlifier.hr();
                         break;
                     }
-                case 'codeblock': 
+                case 'codeblock':
                     {
                         str += htmlifier.codeblock(token);
                         break;
