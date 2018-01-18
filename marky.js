@@ -10,6 +10,8 @@
         bold: /^[*_]{2}([^\n]+)[*_]{2}/,
         italic: /^[*_]([^\n]+)[*_]/,
         hr: /^(-{2,})(?:\n+)/,
+        code: /^`([^\n]+)`/,
+        codeblock: /^```\s*(\w*)\n((.|[\r\n])+)\n```/,
         text: /([^\n]+)/
     }
 
@@ -69,6 +71,16 @@
                 });
                 continue;
             }
+            // Grab code block
+            if (token = lib.codeblock.exec(md)) {
+                tokens.push({
+                    rule: 'codeblock',
+                    lang: token[1],
+                    text: token[2]
+                });
+                md = md.substring(token[0].length);
+                continue;
+            }
             // Grab free text
             if (token = lib.text.exec(md)) {
                 tokens.push({
@@ -119,8 +131,17 @@
                 text = text.substring(token[0].length);
                 str += htmlifier.img(image);
             }
+            // Catch inline code
+            if (token = lib.code.exec(text)) {
+                let code = {
+                    rule: 'code',
+                    text: token[1]
+                };
+                text = text.substring(token[0].length);
+                str += htmlifier.code(code);
+            }
             // Catch any lines that begin with a [, *, or _ that were not caught by the rules above
-            if (token = /(^[^\[\*_]+)/.exec(text)) {
+            if (token = /(^[^\[\*_`]+)/.exec(text)) {
                 str += token[1];
                 text = text.substring(token[0].length);
                 continue;
@@ -179,6 +200,15 @@
         return '<hr/>';
     }
 
+    Htmlifier.prototype.code = function (code) {
+        return '<code>' + code.text + '</code>';
+    }
+
+    Htmlifier.prototype.codeblock = function (code) {
+        return '<pre><code class="' + code.lang + '">' +
+            code.text + '</code></pre>'
+    }
+
     Htmlifier.prototype.paragraph = function (text) {
         return '<p>' +
             parseInner(text.text) +
@@ -207,6 +237,11 @@
                 case 'hr':
                     {
                         str += htmlifier.hr();
+                        break;
+                    }
+                case 'codeblock': 
+                    {
+                        str += htmlifier.codeblock(token);
                         break;
                     }
                 case 'text':
