@@ -1,4 +1,6 @@
-#Marky
+[![npm](https://img.shields.io/npm/v/markyjs.svg)](https://www.npmjs.com/package/markyjs)
+[![npm](https://img.shields.io/npm/dm/markyjs.svg)](https://www.npmjs.com/package/markyjs)
+# Marky
 
 A super simple markdown to HTML parser.
 ---

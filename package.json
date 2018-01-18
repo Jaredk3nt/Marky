@@ -1,0 +1,23 @@
+{
+  "name": "markyjs",
+  "version": "1.0.0",
+  "description": "A markdown parser to HTML for javascript",
+  "main": "marky.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jaredk3nt/Marky.git"
+  },
+  "keywords": [
+    "markdown",
+    "javascript"
+  ],
+  "author": "Jared Jones",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Jaredk3nt/Marky/issues"
+  },
+  "homepage": "https://github.com/Jaredk3nt/Marky#readme"
+}
