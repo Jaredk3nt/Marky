@@ -1,6 +1,6 @@
 'use strict';
 (function () {
-    const lib = {
+    var lib = {
         newline: /^\n+/,
         heading: /^(#{1,6})\s*([^\n]+)/,
         blockquote: /^>([^\n]+)/,
@@ -12,11 +12,12 @@
         hr: /^(-{2,})(?:\n+)/,
         code: /^`([^\n]+)`/,
         codeblock: /^```\s*(\w*)\n((.|[\r\n])+)\n```/,
+        // table: /^((|([^\n]*))+|)\n(|-{3,}|)+\n((|([^\n]*))+|\n)+/, 
         text: /([^\n]+)/
     }
 
     function tokenize(md) {
-        let tokens = [],
+        var tokens = [],
             token;
 
         while (md) {
@@ -59,7 +60,7 @@
             }
             // Grab unordered list
             if (token = lib.ulist.exec(md)) {
-                let list = [];
+                var list = [];
                 while (token = lib.ulist.exec(md)) {
                     list.push(token[2]);
                     md = md.substring(token[0].length);
@@ -95,13 +96,13 @@
     }
 
     function parseInner(text) {
-        let str = '',
+        var str = '',
             htmlifier = new Htmlifier(),
             token;
         while (text) {
             // Catch inline links
             if (token = lib.link.exec(text)) {
-                let link = {
+                var link = {
                     rule: 'link',
                     text: token[1],
                     url: token[2]
@@ -112,7 +113,7 @@
             }
             // Catch inline bolding
             if (token = lib.bold.exec(text)) {
-                let t = {
+                var t = {
                     rule: 'bold',
                     text: token[1]
                 }
@@ -122,22 +123,24 @@
             }
             // Catch image links
             if (token = lib.img.exec(text)) {
-                let image = {
+                var image = {
                     rule: 'img',
                     text: token[1],
                     src: token[2]
                 }
                 text = text.substring(token[0].length);
                 str += htmlifier.img(image);
+                continue;
             }
             // Catch inline code
             if (token = lib.code.exec(text)) {
-                let code = {
+                var code = {
                     rule: 'code',
                     text: token[1]
                 };
                 text = text.substring(token[0].length);
                 str += htmlifier.code(code);
+                continue;
             }
             // Catch any lines that begin with a [, *, or _ that were not caught by the rules above
             if (token = /(^[^\[\*_`]+)/.exec(text)) {
@@ -215,8 +218,8 @@
     }
 
     function htmlify(tokens, htmlifier) {
-        let str = "";
-        for (let token of tokens) {
+        var str = "";
+        for (var token of tokens) {
             switch (token.rule) {
                 case 'heading':
                     {
@@ -254,8 +257,8 @@
     }
 
     function marky(md) {
-        const htmlifier = new Htmlifier();
-        let tokens = tokenize(md);
+        var htmlifier = new Htmlifier();
+        var tokens = tokenize(md);
         return htmlify(tokens, htmlifier);
     }
 
